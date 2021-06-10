@@ -4,7 +4,7 @@
 #Created 20 May, 2021
 # This program functions as an mp3 player in a digital interface.
 
-
+#Import the python libraries
 from PyQt5.QtWidgets import (QWidget, QSlider, QLineEdit, QLabel, QPushButton, QScrollArea,QApplication,
                              QHBoxLayout, QVBoxLayout, QMainWindow)
 from PyQt5.QtCore import Qt, QSize
@@ -15,32 +15,35 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import numpy as np
 import pygame, eyed3, time, threading, random, serial, math
 from mutagen.mp3 import MP3
-
+#Create a vector to manage the songs
 songs = []
 f = open("X.txt","r")
 for i in f:
     songs.append(i)
-
+#Declare global variables
 song_num = 0
 state = False
+#Declare the serial port
 ser =  serial.Serial('COM6',baudrate=9600, timeout=0.005)
-tmp = ""
-tpass = 0
-maxsong = 0
+tmp = "" #tmp striing for serial data
+tpass = 0 #
+maxsong = 0 #max time of the songs
 ispaused = False
+first = 0 # flag to now if it the first time pausing the music
+#Class to create the User interface
 class Ui_MainWindow(object):
     song_num = 0
     state = True
 #Reproduces the selected song, with te given conditions
     def Reproduce(self,play):
         global song_num, tpass, maxsong
-        f2=open('test1.txt','w')
-        pygame.mixer.init()
-        cur_song = songs[song_num].rstrip()
+        f2=open('test1.txt','w')#Opens the txt to write the data of the song for the OLED
+        pygame.mixer.init() #Starts the mixer
+        cur_song = songs[song_num].rstrip() #Takes the song selected
         cur_song_file = "Songs/%s" % cur_song
         pygame.mixer.music.load(cur_song_file)
         audiofile = eyed3.load(cur_song_file)
-
+#writes the info of current song on file
         title= str(audiofile.tag.title)
         artist = str(audiofile.tag.artist)
         album = str(audiofile.tag.album)
@@ -49,7 +52,7 @@ class Ui_MainWindow(object):
         f2.write(album +"\n")
         f2.write("Track: " + str(song_num+1))
         f2.close()
-
+#variables to set duration song labels
         track = cur_song_file
         audio = MP3(track)
         maxsong = audio.info.length
@@ -61,7 +64,7 @@ class Ui_MainWindow(object):
         else:
             segs = str(s)
         maxsong = int(maxsong)
-
+#Plays the selected song
         if (play == 1):
             pygame.mixer.music.play()
             self.label.setText(str(audiofile.tag.title)+"\n"+str(audiofile.tag.artist)+"\n"+str(audiofile.tag.album)+"\n"+str(audiofile.tag.track_num)+"\n"+str(song_num+1))
@@ -70,6 +73,7 @@ class Ui_MainWindow(object):
             self.horizontalSlider.setMinimum(0)
             self.horizontalSlider.setMaximum(maxsong)
             self.horizontalSlider.setValue(0)
+#Pauses the selected song
         else:
             pygame.mixer.music.pause()
 #Goes to the next song
@@ -82,17 +86,21 @@ class Ui_MainWindow(object):
         self.Reproduce(1)
 #Intercalates between Pause and Play the songs
     def PlayPause(self):
-        global ispaused
-        global state
-        if (state == True):
-            state = False
+        global ispaused, state, first
+        if (first != 0):
+            if (state == True):
+                state = False
+                pygame.mixer.music.pause()
+                ispaused = True
+
+            else:
+                state = True
+                pygame.mixer.music.unpause()
+                ispaused = False
+        else:
+            first = 1
             pygame.mixer.music.pause()
             ispaused = True
-
-        else:
-            state = True
-            pygame.mixer.music.unpause()
-            ispaused = False
 #Goes to the Previous song
     def Previous(self):
         global song_num
@@ -111,7 +119,7 @@ class Ui_MainWindow(object):
         global song_num
         song_num = random.randrange(0,len(songs))
         self.Reproduce(1)
-#Setup the ui
+#Setup the user interface
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(810, 619)
@@ -129,7 +137,8 @@ class Ui_MainWindow(object):
             self.vbox.addWidget(object)
 
         self.widget.setLayout(self.vbox)
-
+#Code generated with QT designer for the interface
+#///////////////////////////////////////////////////////////////////////////////
         #Scroll Area Properties
         self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -162,7 +171,7 @@ class Ui_MainWindow(object):
         self.prev.setGeometry(QtCore.QRect(250, 470, 91, 91))
         self.prev.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("prev.jpeg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("prev.jpg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.prev.setIcon(icon)
         self.prev.setIconSize(QtCore.QSize(150, 150))
         self.prev.setCheckable(False)
@@ -175,7 +184,7 @@ class Ui_MainWindow(object):
         self.stop.setGeometry(QtCore.QRect(470, 470, 91, 91))
         self.stop.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("stop.jpeg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("stop.jpg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.stop.setIcon(icon1)
         self.stop.setIconSize(QtCore.QSize(150, 150))
         self.stop.setAutoDefault(True)
@@ -185,7 +194,7 @@ class Ui_MainWindow(object):
         self.play_pause.setGeometry(QtCore.QRect(360, 470, 91, 91))
         self.play_pause.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("play_pause.jpeg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("play_pause.jpg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.play_pause.setIcon(icon2)
         self.play_pause.setIconSize(QtCore.QSize(150, 150))
         self.play_pause.setAutoDefault(True)
@@ -195,13 +204,13 @@ class Ui_MainWindow(object):
         self.next.setGeometry(QtCore.QRect(580, 470, 91, 91))
         self.next.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("next.jpeg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap("next.jpg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.next.setIcon(icon3)
         self.next.setIconSize(QtCore.QSize(150, 150))
         self.next.setDefault(True)
         self.next.setObjectName("next")
         self.label_data_input = QtWidgets.QLabel(self.centralwidget)
-        self.label_data_input.setGeometry(QtCore.QRect(130, 460, 81, 51))
+        self.label_data_input.setGeometry(QtCore.QRect(130, 460, 100s, 51))
         font = QtGui.QFont()
         font.setPointSize(15)
         font.setItalic(True)
@@ -264,7 +273,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
+#pushbuttons of interface actions connected
         self.prev.clicked.connect(self.Previous)
         self.play_pause.clicked.connect(self.PlayPause)
         self.next.clicked.connect(self.Next)
@@ -281,11 +290,11 @@ class Ui_MainWindow(object):
         self.label_data_vol.setText(_translate("MainWindow", "-"))
         self.label_volume.setText(_translate("MainWindow", "Volume:"))
         self.time_s_begin.setText(_translate("MainWindow", "0:00"))
-
+#///////////////////////////////////////////////////////////////////////////////
         self.timeout = 0
         self.random_song()
         self.check_serial_event()
-
+#Controls the time labels of the interface and change to next song after one ends
     def song_time(self,tpass):
         global maxsong, ispaused
         tp2 = tpass // 60
@@ -307,12 +316,12 @@ class Ui_MainWindow(object):
                     else:
                         self.time_s_begin.setText(str(tp2)+":"+str(tpass%60))
                 self.horizontalSlider.setValue(tpass)
-
+#This function controls the data recived form arduino to set volume and do the pushbutton functions
     def check_serial_event(self):
-        global tmp,tpass, song_num, maxsong
-        tpass+=1
+        global tmp,tpass, song_num, maxsong, ispaused
+        if ispaused == False:
+            tpass+=1
         self.timeout += 1
-        # print (self.timeout)
         serial_thread = threading.Timer(1, self.check_serial_event)
         serial_thread.setDaemon(True)
         if ser.is_open == True:
@@ -320,39 +329,42 @@ class Ui_MainWindow(object):
             self.song_time(tpass)
             if ser.in_waiting:
                 line = ser.readline().decode('utf-8').rstrip()
-                key = line[1:2]
-                value = line[4:]
-                # print(key)
-                # print(value)
-                if (key == "1"):
+                key = line[1:2]#Defines if the action is for the volume or the pad
+                value = line[4:]#Gets the value
+                if (key == "1"): #data from potentiometer
                     volume_level = int(value)/1023
                     pygame.mixer.music.set_volume(volume_level)
                     volume_porc = int(volume_level*100)
                     self.label_data_vol.setText(str(volume_porc)+"%")
-                if (key == "2"):
+                if (key == "2"): #data from keypad
                     if value.isdigit()== True:
                         tmp += value
                         self.label_data_input.setText(tmp)
-                    elif value == "*":
+                    elif value == "*":#Enter for the numerical inputs
                         self.label_data_input.setText(tmp)
                         if (int(tmp)-1<len(songs)):
-                            song_num = int(tmp)-1
-                            self.Reproduce(1)
-                        # llamado a funcion de canciones
+                            song_num = int(tmp)-1 #if the song number is valid
+                            self.Reproduce(1) #reproduces the selected song
                         tmp = ""
                     else:
-                        self.label_data_input.setText(value)
                         if value == "A":
+                            self.label_data_input.setText("Previous")
                             self.Previous()
                         if value == "B":
+                            if (ispaused == True):
+                                self.label_data_input.setText("Play")
+                            else:
+                                self.label_data_input.setText("Pause")
                             self.PlayPause()
                         if value == "C":
+                            self.label_data_input.setText("Restart")
                             self.Stop()
                         if value == "D":
+                            self.label_data_input.setText("Next")
                             self.Next()
                         if value == "#":
+                            self.label_data_input.setText("Random")
                             self.random_song()
-
                     self.timeout = 0
 
 if __name__ == "__main__":
