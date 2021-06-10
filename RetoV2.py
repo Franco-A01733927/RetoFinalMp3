@@ -32,11 +32,21 @@ class Ui_MainWindow(object):
 #Reproduces the selected song, with te given conditions
     def Reproduce(self,play):
         global song_num
+        f2=open('test1.txt','w')
         pygame.mixer.init()
         cur_song = songs[song_num].rstrip()
         cur_song_file = "Songs/%s" % cur_song
         pygame.mixer.music.load(cur_song_file)
         audiofile = eyed3.load(cur_song_file)
+
+        title= str(audiofile.tag.title)
+        artist = str(audiofile.tag.artist)
+        album = str(audiofile.tag.album)
+        f2.write(title+"\n")
+        f2.write(artist+"\n")
+        f2.write(album +"\n")
+        f2.write("Track: " + str(song_num+1))
+        f2.close()
 
         track = cur_song_file
         audio = MP3(track)
@@ -86,17 +96,6 @@ class Ui_MainWindow(object):
         song_num = random.randrange(0,len(songs))
         self.Reproduce(1)
 #Detects what button was pressed
-
-    ''''
-    def increaseVolume(self):
-		vol = self.player.volume()
-		vol = min(vol+5,100)
-		self.player.setVolume(vol)
-
-	def decreaseVolume(self):
-		vol = self.player.volume()
-		vol = max(vol-5,0)
-		self.player.setVolume(vol)'''
     #Setup the ui
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -251,6 +250,9 @@ class Ui_MainWindow(object):
 
         # User Code
         self.timeout = 0
+        self.random_song()
+
+        #if (event.type == QUIT):
         self.check_serial_event()
 
     def check_serial_event(self):
@@ -258,34 +260,49 @@ class Ui_MainWindow(object):
         self.timeout += 1
         # print (self.timeout)
         serial_thread = threading.Timer(1, self.check_serial_event)
+        serial_thread.setDaemon(True)
         if ser.is_open == True:
             serial_thread.start()
+
             if ser.in_waiting:
                 line = ser.readline().decode('utf-8').rstrip()
-                if line.isdigit()== True:
-                    tmp += line
-                    self.label_data.setText(tmp)
-                elif line == "*":
-                    self.label_data.setText(tmp)
-                    if (int(tmp)-1<len(songs)):
-                        song_num = int(tmp)-1
-                        self.Reproduce(1)
-                    # llamado a funcion de canciones
-                    tmp = ""
-                else:
-                    self.label_data.setText(line)
-                    if line == "A":
-                        self.Previous()
-                    if line == "B":
-                        self.PlayPause()
-                    if line == "C":
-                        self.Stop()
-                    if line == "D":
-                        self.Next()
-                    if line == "#":
-                        self.random_song()
+                key = line[1:2]
+                value = line[4:]
+                # print(key)
+                # print(value)
+                if (key == "1"):
+                    volume_level = int(value)/1023
+                    pygame.mixer.music.set_volume(volume_level)
+                    volume_porc = int(volume_level*100)
+                    self.label_input.setText("Volume: ")
+                    self.label_data.setText(str(volume_porc)+"%")
+                if (key == "2"):
+                    self.label_input.setText("Input: ")
+                    if value.isdigit()== True:
+                        tmp += value
+                        self.label_data.setText(tmp)
+                    elif value == "*":
+                        self.label_data.setText(tmp)
+                        if (int(tmp)-1<len(songs)):
+                            song_num = int(tmp)-1
+                            self.Reproduce(1)
+                        # llamado a funcion de canciones
+                        tmp = ""
+                    else:
+                        self.label_data.setText(value)
+                        if value == "A":
+                            self.Previous()
+                        if value == "B":
+                            self.PlayPause()
+                        if value == "C":
+                            self.Stop()
+                        if value == "D":
+                            self.Next()
+                        if value == "#":
+                            self.random_song()
 
-                self.timeout = 0
+                    self.timeout = 0
+            #serial_thread.cancel()
 
 if __name__ == '__main__':
     import sys
@@ -294,6 +311,7 @@ if __name__ == '__main__':
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
-    sys.exit(app.exec_())
+    exit(app.exec_())
     ser.flush()
+    #serial_thread.cancel()
     main()
