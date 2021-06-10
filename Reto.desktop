@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Act6_m4
+Exec="/home/pi/Desktop/SOC/script/prueba_8"
+Icon = /home/pi/Desktop/SOC/Reto/random.jpg
+Terminal=false (tried true)
+Comment="RETO TE2003B.1"
