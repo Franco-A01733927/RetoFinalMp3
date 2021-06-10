@@ -21,17 +21,19 @@ f = open("X.txt","r")
 for i in f:
     songs.append(i)
 
-
 song_num = 0
 state = False
 ser =  serial.Serial('COM6',baudrate=9600, timeout=0.005)
 tmp = ""
+tpass = 0
+maxsong = 0
+ispaused = False
 class Ui_MainWindow(object):
     song_num = 0
     state = True
 #Reproduces the selected song, with te given conditions
     def Reproduce(self,play):
-        global song_num
+        global song_num, tpass, maxsong
         f2=open('test1.txt','w')
         pygame.mixer.init()
         cur_song = songs[song_num].rstrip()
@@ -50,13 +52,24 @@ class Ui_MainWindow(object):
 
         track = cur_song_file
         audio = MP3(track)
-        m = int(audio.info.length // 60)
-        s = int(audio.info.length % 60)
+        maxsong = audio.info.length
+        mx = maxsong
+        m = int(mx// 60)
+        s = int(mx % 60)
+        if s < 10 :
+            segs = "0"+ str(s)
+        else:
+            segs = str(s)
+        maxsong = int(maxsong)
 
         if (play == 1):
             pygame.mixer.music.play()
-            self.label.setText(str(audiofile.tag.title)+"\n"+str(audiofile.tag.artist)+"\n"+str(audiofile.tag.album)+"\n"+str(audiofile.tag.track_num)+"\n")
-            self.time_s.setText(str(m)+':'+str(s))
+            self.label.setText(str(audiofile.tag.title)+"\n"+str(audiofile.tag.artist)+"\n"+str(audiofile.tag.album)+"\n"+str(audiofile.tag.track_num)+"\n"+str(song_num+1))
+            self.time_s_end.setText(str(m)+':'+segs)
+            tpass = 0
+            self.horizontalSlider.setMinimum(0)
+            self.horizontalSlider.setMaximum(maxsong)
+            self.horizontalSlider.setValue(0)
         else:
             pygame.mixer.music.pause()
 #Goes to the next song
@@ -69,14 +82,17 @@ class Ui_MainWindow(object):
         self.Reproduce(1)
 #Intercalates between Pause and Play the songs
     def PlayPause(self):
+        global ispaused
         global state
         if (state == True):
             state = False
             pygame.mixer.music.pause()
+            ispaused = True
 
         else:
             state = True
             pygame.mixer.music.unpause()
+            ispaused = False
 #Goes to the Previous song
     def Previous(self):
         global song_num
@@ -95,8 +111,7 @@ class Ui_MainWindow(object):
         global song_num
         song_num = random.randrange(0,len(songs))
         self.Reproduce(1)
-#Detects what button was pressed
-    #Setup the ui
+#Setup the ui
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(810, 619)
@@ -121,6 +136,8 @@ class Ui_MainWindow(object):
         self.scroll.setWidgetResizable(True)
         self.scroll.setWidget(self.widget)
 
+        font = QtGui.QFont()
+        font.setPointSize(10)
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(520, 30, 271, 291))
         font = QtGui.QFont()
@@ -131,16 +148,16 @@ class Ui_MainWindow(object):
         self.label.setOpenExternalLinks(False)
         self.label.setObjectName("label")
         self.horizontalSlider = QtWidgets.QSlider(self.centralwidget)
-        self.horizontalSlider.setGeometry(QtCore.QRect(510, 370, 211, 20))
+        self.horizontalSlider.setGeometry(QtCore.QRect(530, 410, 241, 20))
         self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
         self.horizontalSlider.setObjectName("horizontalSlider")
-        self.time_s = QtWidgets.QLabel(self.centralwidget)
-        self.time_s.setGeometry(QtCore.QRect(720, 360, 71, 31))
+        self.time_s_end = QtWidgets.QLabel(self.centralwidget)
+        self.time_s_end.setGeometry(QtCore.QRect(720, 360, 71, 31))
         font = QtGui.QFont()
         font.setPointSize(14)
-        self.time_s.setFont(font)
-        self.time_s.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.time_s.setObjectName("time_s")
+        self.time_s_end.setFont(font)
+        self.time_s_end.setAlignment(QtCore.Qt.AlignCenter)
+        self.time_s_end.setObjectName("time_s_end")
         self.prev = QtWidgets.QPushButton(self.centralwidget)
         self.prev.setGeometry(QtCore.QRect(250, 470, 91, 91))
         self.prev.setText("")
@@ -183,16 +200,16 @@ class Ui_MainWindow(object):
         self.next.setIconSize(QtCore.QSize(150, 150))
         self.next.setDefault(True)
         self.next.setObjectName("next")
-        self.label_data = QtWidgets.QLabel(self.centralwidget)
-        self.label_data.setGeometry(QtCore.QRect(100, 490, 121, 51))
+        self.label_data_input = QtWidgets.QLabel(self.centralwidget)
+        self.label_data_input.setGeometry(QtCore.QRect(130, 460, 81, 51))
         font = QtGui.QFont()
         font.setPointSize(15)
         font.setItalic(True)
-        self.label_data.setFont(font)
-        self.label_data.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_data.setObjectName("label_data")
+        self.label_data_input.setFont(font)
+        self.label_data_input.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_data_input.setObjectName("label_data_input")
         self.label_input = QtWidgets.QLabel(self.centralwidget)
-        self.label_input.setGeometry(QtCore.QRect(10, 490, 91, 51))
+        self.label_input.setGeometry(QtCore.QRect(10, 460, 91, 51))
         font = QtGui.QFont()
         font.setPointSize(15)
         font.setBold(True)
@@ -212,6 +229,30 @@ class Ui_MainWindow(object):
         self.random.setDefault(True)
         self.random.setFlat(False)
         self.random.setObjectName("random")
+        self.label_data_vol = QtWidgets.QLabel(self.centralwidget)
+        self.label_data_vol.setGeometry(QtCore.QRect(130, 500, 81, 51))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        font.setItalic(True)
+        self.label_data_vol.setFont(font)
+        self.label_data_vol.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_data_vol.setObjectName("label_data_vol")
+        self.label_volume = QtWidgets.QLabel(self.centralwidget)
+        self.label_volume.setGeometry(QtCore.QRect(0, 500, 131, 51))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_volume.setFont(font)
+        self.label_volume.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_volume.setObjectName("label_volume")
+        self.time_s_begin = QtWidgets.QLabel(self.centralwidget)
+        self.time_s_begin.setGeometry(QtCore.QRect(510, 360, 71, 31))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.time_s_begin.setFont(font)
+        self.time_s_begin.setAlignment(QtCore.Qt.AlignCenter)
+        self.time_s_begin.setObjectName("time_s_begin")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 810, 26))
@@ -230,40 +271,53 @@ class Ui_MainWindow(object):
         self.stop.clicked.connect(self.Stop)
         self.random.clicked.connect(self.random_song)
 
-        # while (ser.in_waiting < 0):
-        #     tmp = ""
-        #     line = ser.readline().decode('utf-8').rstrip()
-        #     if (line.isdigit()== True):
-        #         line = ser.readline().decode('utf-8').rstrip()
-        #         tmp += line
-        #         print (tmp,"---")
-
-
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-
-        self.label.setText(_translate("MainWindow", " - "))
-        self.time_s.setText(_translate("MainWindow", "0:00"))
-        self.label_data.setText(_translate("MainWindow", "-"))
+        self.label.setText(_translate("MainWindow", "-"))
+        self.time_s_end.setText(_translate("MainWindow", "0:00"))
+        self.label_data_input.setText(_translate("MainWindow", "-"))
         self.label_input.setText(_translate("MainWindow", "Input:"))
+        self.label_data_vol.setText(_translate("MainWindow", "-"))
+        self.label_volume.setText(_translate("MainWindow", "Volume:"))
+        self.time_s_begin.setText(_translate("MainWindow", "0:00"))
 
-        # User Code
         self.timeout = 0
         self.random_song()
-
-        #if (event.type == QUIT):
         self.check_serial_event()
 
+    def song_time(self,tpass):
+        global maxsong, ispaused
+        tp2 = tpass // 60
+        if ispaused == True:
+            return
+        else:
+            if tpass > maxsong:
+                self.Next()
+                return
+            else:
+                if (tpass // 60 < 0):
+                    if tpass < 10:
+                        self.time_s_begin.setText("0:0"+str(tpass))
+                    else:
+                        self.time_s_begin.setText("0:"+str(tpass))
+                else:
+                    if (tpass%60) < 10:
+                        self.time_s_begin.setText(str(tp2)+":0"+str(tpass%60))
+                    else:
+                        self.time_s_begin.setText(str(tp2)+":"+str(tpass%60))
+                self.horizontalSlider.setValue(tpass)
+
     def check_serial_event(self):
-        global tmp, song_num
+        global tmp,tpass, song_num, maxsong
+        tpass+=1
         self.timeout += 1
         # print (self.timeout)
         serial_thread = threading.Timer(1, self.check_serial_event)
         serial_thread.setDaemon(True)
         if ser.is_open == True:
             serial_thread.start()
-
+            self.song_time(tpass)
             if ser.in_waiting:
                 line = ser.readline().decode('utf-8').rstrip()
                 key = line[1:2]
@@ -274,22 +328,20 @@ class Ui_MainWindow(object):
                     volume_level = int(value)/1023
                     pygame.mixer.music.set_volume(volume_level)
                     volume_porc = int(volume_level*100)
-                    self.label_input.setText("Volume: ")
-                    self.label_data.setText(str(volume_porc)+"%")
+                    self.label_data_vol.setText(str(volume_porc)+"%")
                 if (key == "2"):
-                    self.label_input.setText("Input: ")
                     if value.isdigit()== True:
                         tmp += value
-                        self.label_data.setText(tmp)
+                        self.label_data_input.setText(tmp)
                     elif value == "*":
-                        self.label_data.setText(tmp)
+                        self.label_data_input.setText(tmp)
                         if (int(tmp)-1<len(songs)):
                             song_num = int(tmp)-1
                             self.Reproduce(1)
                         # llamado a funcion de canciones
                         tmp = ""
                     else:
-                        self.label_data.setText(value)
+                        self.label_data_input.setText(value)
                         if value == "A":
                             self.Previous()
                         if value == "B":
@@ -302,16 +354,12 @@ class Ui_MainWindow(object):
                             self.random_song()
 
                     self.timeout = 0
-            #serial_thread.cancel()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
-    exit(app.exec_())
-    ser.flush()
-    #serial_thread.cancel()
-    main()
+    sys.exit(app.exec_())
