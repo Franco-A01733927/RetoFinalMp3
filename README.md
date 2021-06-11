@@ -9,8 +9,8 @@ Alan Mondragón Rivas - A01734565
 Created 20 May, 2021
 
 This program functions as an mp3 player with a digital interface running on a
-raspberry pi with a keypad and a potentiometer connected to an Arduino Uno, that
-at the same time sends the data with UART protocol to the raspberry
+Raspberry Pi with a keypad and a potentiometer connected to an Arduino Uno, that
+at the same time sends the data with UART protocol to the RPI which is going to comunicate with the OLED display using I2C
 
 For this program to run properly the user needs to install the keypad.h library in the arduino IDE
 , also needs to install the following libraries on python:
@@ -30,14 +30,14 @@ For this program to run properly the user needs to install the keypad.h library 
 * PIL (pip install PIL)
 
 ## Keypad and potenciometer functionalities:
-- Number Keys (0-9): Enter song number of playlist
-- Select Key (\*): Select the song enter by the number keys
-- Previous key (A): Reproduces previous song
-- Play/Pause key (B): Pauses or play a song
-- Stop key (C): Reproduces the first song of the playlist
-- Next key (D): Reproduces next song
-- Random key (\#): Reproduces a random song on playlist
-- Potenciometer: sets volume of music player
+- **Number Keys (0-9):** Enter song number of playlist
+- **Select Key (\*):** Select the song enter by the number keys
+- **Previous key (A):** Reproduces previous song
+- **Play/Pause key (B):** Pauses or play a song
+- **Stop key (C):** Reproduces the first song of the playlist
+- **Next key (D):** Reproduces next song
+- **Random key (\#):** Reproduces a random song on playlist
+- **Potenciometer:** sets volume of music player
 
 ## How to Run it with a desktop file:
 1. To create the desktop file you need to create a file like the "prueba_8" where you only specify the path of the main file and the command on terminal to run the python files at the same time ("RetoV2.py" & "oledt1.py").
