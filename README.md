@@ -33,3 +33,5 @@ For this program to run properly the user needs to install the keypad.h library 
 1. To create the desktop file you need to create a file like the "prueba_8" where you only specify the path of the main file and the command on terminal to run the python file(s).
 2. Ones you have the path on that file, you need to create the desktop file just like the "Reto.desktop" file and change the path where the previous file was located ("prueba_8"), and the path to the icon you want to watch on your desktop file (optional).
 3. Double click the icon of the program created and click on the button "Execute in terminal" to run the program.
+![image](https://user-images.githubusercontent.com/67660198/121631735-44c13900-ca45-11eb-81fe-93c8ae44d123.png)
+![image](https://user-images.githubusercontent.com/67660198/121631766-530f5500-ca45-11eb-976f-3f13e3c17fda.png)
