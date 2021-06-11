@@ -17,7 +17,7 @@ import pygame, eyed3, time, threading, random, serial, math
 from mutagen.mp3 import MP3
 #Create a vector to manage the songs
 songs = []
-f = open("X.txt","r")
+f = open("SongNames.txt","r")
 for i in f:
     songs.append(i)
 #Declare global variables
