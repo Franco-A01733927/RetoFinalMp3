@@ -57,7 +57,9 @@ For this program to run properly the user needs to install the keypad.h library 
 
 ## Notes
 1. Change all your paths in the following files:
-␣␣␣␣␣-␣- prueba_8
-  * Mp3.py (also check your serial port)
+* prueba_8
+* Mp3.py (also check your serial port)
 2. All the files need to be in the same folder
 3. All the songs have to be in a folder named "Songs" and needs to be in the same folder that all the files
+100. Primer elemento de la lista
+     - Primer elemento de la lista anidada
