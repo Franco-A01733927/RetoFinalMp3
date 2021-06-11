@@ -1,4 +1,4 @@
-#RetoFinalMp3
+# RetoFinalMp3
 
 Video: [Reto TE2003B](https://youtu.be/vWmVSsLhZlg)
 
@@ -20,7 +20,7 @@ For this program to run properly the user needs to install the keypad.h library
 * mutagen (pip install mutagen)
 * threading (pip install threading)
 
-# How to Run it with a desktop file:
+## How to Run it with a desktop file:
 
 1. To create the desktop file you need to create a file like the "prueba_8" where you only specify the path of the main file and the command on terminal to run the python file(s).
 2. Ones you have the path on that file, you need to create the desktop file just like the "Reto.desktop" file and change the path where the previous file was located ("pyfiles"), and the path to the icon you want to watch on your shortcut (optional).
