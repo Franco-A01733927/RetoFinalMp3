@@ -14,19 +14,20 @@ at the same time sends the data with UART protocol to the raspberry
 
 For this program to run properly the user needs to install the keypad.h library in the arduino IDE
 , also needs to install the following libraries on python:
-####### Arduino:
+###### Arduino:
 * install Keypad-master.zip (zip included in the repository)
-####### RPI:
+###### RPI:
 * pygame (pip install pygame)
 * pyqt5 (pip install pyqt5)
 * eyed3 (pip install eyed3)
 * mutagen (pip install mutagen)
 * threading (pip install threading)
-####### OLED:
+###### OLED:
 * Adafruit_SSD1306 (pip install Adafruit_SSD1306)
 * PIL (pip install PIL)
 
-
+## Keypad key functions and potenciometer
+- Keys (-9)
 
 ## How to Run it with a desktop file:
 1. To create the desktop file you need to create a file like the "prueba_8" where you only specify the path of the main file and the command on terminal to run the python file(s).
