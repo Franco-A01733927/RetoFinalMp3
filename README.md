@@ -54,3 +54,9 @@ For this program to run properly the user needs to install the keypad.h library 
 
 ![image](https://user-images.githubusercontent.com/67660198/121631735-44c13900-ca45-11eb-81fe-93c8ae44d123.png)
 ![image](https://user-images.githubusercontent.com/67660198/121631766-530f5500-ca45-11eb-976f-3f13e3c17fda.png)
+
+## Notes
+1. Change all your paths in the following files:
+  * prueba_8
+  * Mp3.py (also check your serial port)
+  * 
