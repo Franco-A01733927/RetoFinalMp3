@@ -14,7 +14,7 @@ at the same time sends the data with UART protocol to the raspberry
 
 For this program to run properly the user needs to install the keypad.h library 
 (zip included in the repository), also needs to install the following libraries:
-- [] pygame (pip install pygame) pygame (pip install pygame)
+- [ ] pygame (pip install pygame) pygame (pip install pygame)
 * pyqt5 (pip install pyqt5)
 * eyed3 (pip install eyed3)
 * mutagen (pip install mutagen)
