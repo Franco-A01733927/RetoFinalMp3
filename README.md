@@ -10,9 +10,9 @@ Created 20 May, 2021
 
 This program functions as an mp3 player with a digital interface running on a
 Raspberry Pi with a keypad and a potentiometer connected to an Arduino Uno, that
-at the same time sends the data with UART protocol to the RPI which it going to communicate with the OLED display by I2C
+at the same time sends the data with UART protocol to the RPI which it going to communicate with the OLED display by I2C.
 
-![image](https://user-images.githubusercontent.com/67660198/121632471-a504aa80-ca46-11eb-9166-dc69a472da11.png)
+![image](https://user-images.githubusercontent.com/67660198/121632620-eb5a0980-ca46-11eb-9699-6699006d0592.png)
 
 For this program to run properly the user needs to install the keypad.h library in the arduino IDE
 , also needs to install the following libraries on python:
@@ -47,8 +47,8 @@ For this program to run properly the user needs to install the keypad.h library 
 3. Double click the icon of the program created and click on the button "Execute in terminal" to run the program.
 
 ## Adding a new song
-1. Copy the mp3 file of the song to the Songs folder
-2. Copy the full name of the song file (without the rute) to the SongNames.txt
+1. Copy the mp3 file of the song to the Songs folder.
+2. Copy the full name of the song file (without the rute) to the SongNames.txt.
 
 ## Circuit Diagrams
 
