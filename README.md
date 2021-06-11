@@ -9,8 +9,8 @@ Alan Mondragón Rivas - A01734565
 Created 20 May, 2021
 
 This program functions as an mp3 player with a digital interface running on a
-raspberry pi with a keypad and a potentiometer connected to an Arduino Uno, that
-at the same time sends the data with UART protocol to the raspberry
+Raspberry Pi with a keypad and a potentiometer connected to an Arduino Uno, that
+at the same time sends the data with UART protocol to the RPI which it going to communicate with the OLED display by I2C
 
 ![image](https://user-images.githubusercontent.com/67660198/121632471-a504aa80-ca46-11eb-9166-dc69a472da11.png)
 
