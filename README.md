@@ -31,7 +31,7 @@ For this program to run properly the user needs to install the keypad.h library 
 * Adafruit_SSD1306 (pip install Adafruit_SSD1306)
 * PIL (pip install PIL)
 
-## Keypad and potenciometer functionalities:
+## Keypad and potentiometer functionalities:
 - Number Keys (0-9): Enter song number of playlist
 - Select Key (\*): Select the song enter by the number keys
 - Previous key (A): Reproduces previous song
@@ -39,7 +39,7 @@ For this program to run properly the user needs to install the keypad.h library 
 - Stop key (C): Reproduces the first song of the playlist
 - Next key (D): Reproduces next song
 - Random key (\#): Reproduces a random song on playlist
-- Potenciometer: sets volume of music player
+- Potentiometer: sets volume of music player
 
 ## How to Run it with a desktop file:
 1. To create the desktop file you need to create a file like the "prueba_8" where you only specify the path of the main file and the command on terminal to run the python files at the same time ("RetoV2.py" & "oledt1.py").
@@ -48,7 +48,7 @@ For this program to run properly the user needs to install the keypad.h library 
 
 ## Adding a new song
 1. Copy the mp3 file of the song to the Songs folder.
-2. Copy the full name of the song file (without the rute) to the SongNames.txt.
+2. Copy the full name of the song file (without the path) to the SongNames.txt.
 
 ## Circuit Diagrams
 
